@@ -151,6 +151,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: end;
+    width: 25%;
 }
 .header__btn {
     display: flex;
