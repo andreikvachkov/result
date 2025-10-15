@@ -1,0 +1,436 @@
+* {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+}
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    scroll-behavior: auto;
+}
+body {
+    background: #000;
+    position: relative;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    color: #fff;
+    font-family: Inter;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+}
+html {
+    font-size: calc(16vw / 14.4);
+}
+@media screen and (max-width: 768px) {
+    html {
+        font-size: calc(16vw / 3.75);
+    }
+}
+
+input,
+button,
+textarea {
+    font-family: Inter;
+}
+input {
+    border-radius: 0px;
+    outline: none;
+}
+button {
+    cursor: pointer;
+    color: inherit;
+    background-color: inherit;
+    font-family: Inter;
+    background: none;
+}
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+button,
+a {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-tap-highlight-color: transparent;
+}
+ul li {
+    list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: inherit;
+    font-size: inherit;
+}
+img {
+    display: block;
+    pointer-events: none;
+}
+.container {
+    width: 87.5rem;
+    height: 100%;
+    margin: 0 auto;
+}
+
+/* header start  */
+
+header {
+    position: fixed;
+    z-index: 100;
+    width: 100%;
+    height: 4rem;
+}
+.header__wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+.header__left {
+    width: 25%;
+    display: flex;
+    align-items: center;
+}
+.header__logo {
+    display: flex;
+}
+.header__logo img {
+    width: 8.875rem;
+}
+.header__center {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.header__nav {
+    display: flex;
+    align-items: center;
+}
+.header__nav .header__nav-list {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+.header__nav .header__nav-link {
+    font-size: 14px;
+    line-height: 140%;
+    letter-spacing: -0.0175rem;
+    position: relative;
+}
+.header__nav .header__nav-link::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0.0625rem;
+    transition: all 0.4s ease-in-out;
+    background: #fff;
+    left: 0;
+    bottom: -0.125rem;
+}
+.header__nav .header__nav-link:hover::after {
+    width: 100%;
+}
+.header__right {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+.header__btn {
+    display: flex;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 140%;
+    letter-spacing: -0.0175rem;
+    border-radius: 6.25rem;
+    border: 0.0625rem solid #fff;
+    transition: all 0.4s ease-in-out;
+}
+.header__btn:hover {
+    background: #fff;
+    color: #000;
+}
+
+/* header end  */
+
+/* hero start  */
+
+.hero {
+    height: 100vh;
+    padding: 12.5rem 0 2.25rem;
+    position: relative;
+    overflow: hidden;
+}
+.hero__wrap {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 5;
+}
+.hero__title {
+    max-width: 36.5625rem;
+    color: #fff;
+    text-align: center;
+    font-family: Manrope;
+    font-size: 3.375rem;
+    font-weight: 700;
+    line-height: 120%;
+    letter-spacing: -0.1013rem;
+}
+.hero__text {
+    max-width: 34.6875rem;
+    text-align: center;
+    font-size: 1.375rem;
+    font-weight: 500;
+    line-height: 140%;
+    letter-spacing: -0.0138rem;
+    margin-top: 1rem;
+}
+/* Кнопка */
+.hero__btn {
+    position: relative; /* нужно для позиционирования ::before */
+    display: flex;
+    align-items: center;
+    gap: 0.125rem;
+    margin-top: 3.75rem;
+    color: #000; /* цвет иконки по умолчанию (черный) */
+    transition: color 0.4s ease-in-out; /* плавная смена цвета иконки */
+}
+
+/* Текстовая капсула */
+.hero__btn span {
+    display: flex;
+    align-items: center;
+    color: #000;
+    font-weight: 600;
+    line-height: 140%;
+    letter-spacing: -0.02rem;
+    height: 3.125rem;
+    padding: 0 1.25rem;
+    background: #fff;
+    border-radius: 6.25rem;
+    border: 0.0625rem solid #fff;
+    transition:
+        background 0.4s ease-in-out,
+        color 0.4s ease-in-out,
+        border-color 0.4s ease-in-out;
+}
+
+/* Правый круг (фон под иконкой) — оставляем как был */
+.hero__btn::after {
+    content: "";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.125rem;
+    height: 3.125rem;
+    border-radius: 3.125rem;
+    background-color: #fff;
+    border: 0.0625rem solid #fff;
+    transition:
+        background-color 0.4s ease-in-out,
+        border-color 0.4s ease-in-out;
+    /* позиционировать не нужно — оставляем во флоу как раньше */
+    background-image: none; /* иконку перенесли в ::before */
+}
+
+/* Иконка — поверх круга, красим currentColor */
+.hero__btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0; /* совпадает с кругом ::after */
+    width: 3.125rem;
+    height: 3.125rem;
+
+    /* Маска из твоего SVG (стрелка) */
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='47' height='46' viewBox='0 0 47 46' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M31.0425 14.4578C31.3075 14.458 31.5616 14.5634 31.749 14.7507C31.9364 14.9381 32.0418 15.1922 32.0419 15.4572L32.0419 26.7709C32.0467 26.9051 32.0243 27.0389 31.9762 27.1643C31.9281 27.2897 31.8553 27.4041 31.762 27.5007C31.6687 27.5973 31.557 27.6742 31.4334 27.7267C31.3098 27.7792 31.1768 27.8062 31.0425 27.8062C30.9083 27.8062 30.7753 27.7792 30.6517 27.7267C30.5281 27.6742 30.4163 27.5974 30.3231 27.5007C30.2298 27.4041 30.157 27.2897 30.1089 27.1643C30.0608 27.0389 30.0384 26.9051 30.0432 26.7709L30.0432 17.8708L16.6647 31.2493C16.4772 31.4368 16.2228 31.5422 15.9576 31.5422C15.6924 31.5422 15.438 31.4368 15.2505 31.2493C15.063 31.0617 14.9576 30.8074 14.9576 30.5422C14.9576 30.277 15.063 30.0226 15.2505 29.8351L28.629 16.4566L19.7288 16.4566C19.5946 16.4613 19.4608 16.439 19.3355 16.3909C19.2101 16.3428 19.0957 16.27 18.999 16.1767C18.9024 16.0834 18.8256 15.9717 18.7731 15.848C18.7206 15.7244 18.6936 15.5915 18.6936 15.4572C18.6936 15.3229 18.7206 15.19 18.7731 15.0664C18.8256 14.9428 18.9024 14.831 18.999 14.7378C19.0957 14.6445 19.2101 14.5716 19.3355 14.5235C19.4608 14.4755 19.5946 14.4531 19.7288 14.4578L31.0425 14.4578Z' fill='%23000'/%3E%3C/svg%3E")
+        center / 2.9375rem 2.875rem no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='47' height='46' viewBox='0 0 47 46' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M31.0425 14.4578C31.3075 14.458 31.5616 14.5634 31.749 14.7507C31.9364 14.9381 32.0418 15.1922 32.0419 15.4572L32.0419 26.7709C32.0467 26.9051 32.0243 27.0389 31.9762 27.1643C31.9281 27.2897 31.8553 27.4041 31.762 27.5007C31.6687 27.5973 31.557 27.6742 31.4334 27.7267C31.3098 27.7792 31.1768 27.8062 31.0425 27.8062C30.9083 27.8062 30.7753 27.7792 30.6517 27.7267C30.5281 27.6742 30.4163 27.5974 30.3231 27.5007C30.2298 27.4041 30.157 27.2897 30.1089 27.1643C30.0608 27.0389 30.0384 26.9051 30.0432 26.7709L30.0432 17.8708L16.6647 31.2493C16.4772 31.4368 16.2228 31.5422 15.9576 31.5422C15.6924 31.5422 15.438 31.4368 15.2505 31.2493C15.063 31.0617 14.9576 30.8074 14.9576 30.5422C14.9576 30.277 15.063 30.0226 15.2505 29.8351L28.629 16.4566L19.7288 16.4566C19.5946 16.4613 19.4608 16.439 19.3355 16.3909C19.2101 16.3428 19.0957 16.27 18.999 16.1767C18.9024 16.0834 18.8256 15.9717 18.7731 15.848C18.7206 15.7244 18.6936 15.5915 18.6936 15.4572C18.6936 15.3229 18.7206 15.19 18.7731 15.0664C18.8256 14.9428 18.9024 14.831 18.999 14.7378C19.0957 14.6445 19.2101 14.5716 19.3355 14.5235C19.4608 14.4755 19.5946 14.4531 19.7288 14.4578L31.0425 14.4578Z' fill='%23000'/%3E%3C/svg%3E")
+        center / 2.9375rem 2.875rem no-repeat;
+
+    background-color: currentColor; /* ← красим форму маски */
+    transition: background-color 0.4s ease-in-out;
+}
+
+/* Ховер: круг прозрачный, текст и иконка — белые */
+.hero__btn:hover {
+    color: #fff;
+}
+.hero__btn:hover span {
+    background: none;
+    color: #fff;
+}
+.hero__btn:hover::after {
+    background: none;
+}
+
+.hero__line {
+    position: absolute;
+    z-index: 10;
+    left: 0;
+    bottom: 2.25rem;
+    width: 100%;
+    overflow: hidden;
+}
+.hero__line .carousel-track {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: max-content;
+}
+.hero__line .carousel-item {
+    width: 10.3125rem;
+    height: 5.625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.hero__line .carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.hero__paralax {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+}
+.hero__paralax::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 20;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 17.68%, #000 95.95%);
+}
+.hero__paralax .shape {
+    will-change: transform;
+    transform: translateZ(0);
+    pointer-events: none;
+}
+.hero__paralax .paralax-s-1 {
+    position: absolute;
+    width: 15.8125rem;
+    height: 15.8125rem;
+    top: -3.625rem;
+    left: -5.375rem;
+}
+.hero__paralax .paralax-s-2 {
+    position: absolute;
+    width: 15.875rem;
+    height: 15.875rem;
+    top: 8.5rem;
+    left: -6.625rem;
+    z-index: 2;
+}
+.hero__paralax .paralax-s-3 {
+    position: absolute;
+    width: 15.8125rem;
+    height: 15.8125rem;
+    top: 22.625rem;
+    left: 2.5625rem;
+    z-index: 3;
+}
+.hero__paralax .paralax-s-4 {
+    position: absolute;
+    width: 21.75rem;
+    height: 21.75rem;
+    top: 30.125rem;
+    left: -3.75rem;
+}
+.hero__paralax .paralax-s-5 {
+    position: absolute;
+    width: 15.8125rem;
+    height: 15.8125rem;
+    top: 40.5rem;
+    left: 18.75rem;
+}
+.hero__paralax .paralax-s-6 {
+    position: absolute;
+    width: 15.8125rem;
+    height: 15.8125rem;
+    top: -7.9375rem;
+    left: 20.6875rem;
+}
+.hero__paralax .paralax-s-7 {
+    position: absolute;
+    width: 15.8125rem;
+    height: 15.8125rem;
+    top: 0rem;
+    left: 15.1875rem;
+    z-index: 4;
+}
+.hero__paralax .paralax-s-8 {
+    position: absolute;
+    width: 25.4375rem;
+    height: 25.4375rem;
+    top: -12.5625rem;
+    right: 10.625rem;
+}
+.hero__paralax .paralax-s-9 {
+    position: absolute;
+    width: 25.9375rem;
+    height: 25.9375rem;
+    top: -2.875rem;
+    right: -7.3125rem;
+    z-index: 5;
+}
+.hero__paralax .paralax-s-10 {
+    position: absolute;
+    width: 16.5625rem;
+    height: 16.5625rem;
+    top: 10.625rem;
+    right: -4.375rem;
+}
+.hero__paralax .paralax-s-11 {
+    position: absolute;
+    width: 15.8125rem;
+    height: 15.8125rem;
+    top: 20.8125rem;
+    right: 2.0625rem;
+    z-index: 4;
+}
+.hero__paralax .paralax-s-12 {
+    position: absolute;
+    width: 13.3125rem;
+    height: 13.25rem;
+    top: 35.25rem;
+    right: 17.125rem;
+}
+.hero__paralax .paralax-s-13 {
+    position: absolute;
+    width: 15.8125rem;
+    height: 15.8125rem;
+    top: 33.6875rem;
+    right: -10.0625rem;
+    z-index: 4;
+}
+
+/* hero end  */
