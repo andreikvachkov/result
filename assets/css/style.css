@@ -666,6 +666,60 @@ header.scroll::after {
     transform: translateY(-50%);
     left: -4.375rem;
 }
+.uslugi-section__item-last {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    position: relative;
+    gap: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: #000;
+    padding: 1.25rem;
+    min-height: 12.125rem;
+    overflow: hidden;
+}
+.uslugi-section__item-last::before {
+    content: "";
+    background: url(../images/uslugi-last.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 8.5rem;
+    height: 11.0625rem;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.uslugi-section__item-last__text {
+    width: 20.625rem;
+    font-family: Manrope;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 140%;
+    position: relative;
+    z-index: 2;
+}
+.uslugi-section__item-last__btn {
+    display: flex;
+    padding: 0.625rem 1.25rem;
+    color: #000;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 140%;
+    letter-spacing: -0.0175rem;
+    border-radius: 6.25rem;
+    background: #fff;
+    border: 0.0625rem solid #fff;
+    transition: all 0.4s ease-in-out;
+    position: relative;
+    z-index: 2;
+}
+.uslugi-section__item-last__btn:hover {
+    background: none;
+    color: #fff;
+}
 
 /* uslugi-section end  */
 
@@ -961,7 +1015,7 @@ header.scroll::after {
     padding: 2.5rem;
     height: 31.25rem;
     background-color: #fff;
-    background-image: url("../images/goal_overlay.svg"), url("../images/goal_bg.png");
+    background-image: url("../images/goal_bg.png");
     background-position: center, center;
     background-repeat: no-repeat, no-repeat;
     background-size: contain, cover;
@@ -1214,8 +1268,12 @@ header.scroll::after {
     position: relative;
     white-space: pre-line;
 }
-.ms-word { display: inline; }
-.ms-letter { display: inline; }
+.ms-word {
+    display: inline;
+}
+.ms-letter {
+    display: inline;
+}
 
 .method-section__right {
     border-radius: 6.25rem;

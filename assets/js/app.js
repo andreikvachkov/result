@@ -563,7 +563,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             recalcThumb();
             const thumbST = ScrollTrigger.create({
                 trigger: wrap,
-                start: 'top top+=150',       // старт в 100px от верха
+                start: 'top top+=120',       // старт в 100px от верха
                 end: 'bottom bottom-=70',  // финиш в 50px от низа
                 scrub: 0.35,
                 onUpdate: self => {
@@ -579,7 +579,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             // ПИН ЛЕВОГО КОНТЕНТА — максимально плавно
             ScrollTrigger.create({
                 trigger: wrap,
-                start: 'top top+=100',                 // фиксируем, когда wrap на 100px ниже верха
+                start: 'top top+=120',                 // фиксируем, когда wrap на 100px ниже верха
                 end: () => '+=' + calcPinDistance(), // отлип — ровно при касании низа left__content о низ .uslugi-section__left
                 pin: leftContent,
                 pinSpacing: true,                      // ← включаем прокладку (гладко)
