@@ -563,8 +563,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
             recalcThumb();
             const thumbST = ScrollTrigger.create({
                 trigger: wrap,
-                start: 'top top+=100',       // старт в 100px от верха
-                end: 'bottom bottom-=50',  // финиш в 50px от низа
+                start: 'top top+=150',       // старт в 100px от верха
+                end: 'bottom bottom-=70',  // финиш в 50px от низа
                 scrub: 0.35,
                 onUpdate: self => {
                     rightWrap.style.setProperty('--thumbY', (self.progress * maxY) + 'px');
