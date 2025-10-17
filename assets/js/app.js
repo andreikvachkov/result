@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", (event) => {
     gsap.registerPlugin(ScrollTrigger);
 
-    // 1) Lenis
     const lenis = new Lenis({
         smooth: true,
         lerp: 0.08,
@@ -16,14 +15,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
     requestAnimationFrame(raf);
 
-    // 2) Сообщаем ST о скролле Lenis
     lenis.on('scroll', ScrollTrigger.update);
 
-    // 3) Прокси для виртуального скролла
     ScrollTrigger.scrollerProxy(document.documentElement, {
         scrollTop(value) {
             if (arguments.length) {
-                // мгновенно прокрутить к value (без инерции)
                 lenis.scrollTo(value, { immediate: true });
             }
             return lenis.scroll;
@@ -34,16 +30,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
         pinType: document.documentElement.style.transform ? 'transform' : 'fixed'
     });
 
-    // 4) Рефреш без lenis.update()
     ScrollTrigger.addEventListener('refresh', () => {
-        // на всякий, синхронизируем кадр Lenis
         requestAnimationFrame(() => lenis.raf(performance.now()));
     });
 
     ScrollTrigger.refresh();
 
 
-
+    // Подложка шапки при скроле 
     (() => {
         const header = document.querySelector('header');
         if (!header) return;
@@ -51,7 +45,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         const THRESHOLD = 100;
         const apply = (y) => header.classList.toggle('scroll', y > THRESHOLD);
 
-        // ✅ опираемся на локальный lenis
+
         if (lenis && typeof lenis.on === 'function') {
             apply(lenis.scroll || window.scrollY || 0);
             lenis.on('scroll', ({ scroll }) => apply(scroll));
@@ -62,132 +56,342 @@ document.addEventListener("DOMContentLoaded", (event) => {
         }
     })();
 
+    // Прелоадер 
+    function runPreloader() {
+        const preloader = document.querySelector('.preloader');
+        const percentEl = preloader?.querySelector('.preloader__right p:last-child');
+        if (!preloader || !percentEl) return Promise.resolve();
 
+        const DURATION = 3000;
 
-    const container = document.querySelector('.hero__paralax');
-    if (!container) return;
+        return new Promise(resolve => {
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const shapes = Array.from(container.querySelectorAll('.shape'));
-    if (!shapes.length) return;
+            if (reduce) {
+                percentEl.textContent = '100%';
+                preloader.classList.add('is-out');
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                    resolve();
+                }, 0);
+                return;
+            }
 
-    // ждём, пока картинки готовы (decode быстрее onload)
-    const waitImages = () =>
-        Promise.all(
-            shapes.map(img =>
-                img.complete
-                    ? Promise.resolve()
-                    : (img.decode?.().catch(() => { }) || new Promise(res => (img.onload = img.onerror = res)))
-            )
-        );
+            preloader.classList.add('is-running');
 
-    // небольшая оптимизация отрисовки
-    gsap.set(shapes, { willChange: 'transform', transform: 'translateZ(0)', pointerEvents: 'none' });
+            const start = performance.now();
+            function tick(now) {
+                const t = Math.min(1, (now - start) / DURATION);
+                percentEl.textContent = Math.round(t * 100) + '%';
+                if (t < 1) requestAnimationFrame(tick);
+                else finish();
+            }
+            requestAnimationFrame(tick);
 
-    let landed = false;
+            function finish() {
+                setTimeout(() => {
+                    preloader.classList.add('is-out');
 
-    // ==== "Дыхание": усиленная амплитуда ====
-    // ampY — амплитуда по вертикали (в %, безопасно для параллакса по y в px)
-    // rot  — амплитуда покачивания (в градусах)
-    // scaleAmp — пульсация масштаба (0.03 = ±3%)
-    function enableIdleBreath(nodes, { ampY = 10, rot = 6, scaleAmp = 0.035 } = {}) {
-        nodes.forEach(el => {
-            const dur = gsap.utils.random(2.2, 3.8);
-            const delay = gsap.utils.random(0, 0.4);
-            const rotDir = gsap.utils.random([-1, 1]);
-
-            gsap.to(el, {
-                yPercent: `+=${ampY}`,
-                rotation: `+=${rot * rotDir}`,
-                scale: gsap.utils.random(1 - scaleAmp, 1 + scaleAmp),
-                duration: dur,
-                ease: 'sine.inOut',
-                yoyo: true,
-                repeat: -1,
-                repeatDelay: delay,
-                overwrite: false
-            });
-        });
-    }
-    // ========================
-
-    (async function init() {
-        await waitImages();
-
-        // Анимация "падения" к своим местам (from => к текущему top/left)
-        gsap.from(shapes, {
-            y: () => -window.innerHeight * gsap.utils.random(0.4, 1.2),
-            x: () => gsap.utils.random(-160, 160),
-            rotation: () => gsap.utils.random(-220, 220),
-            scale: () => gsap.utils.random(0.85, 1.15),
-            opacity: 0,
-
-            // было 0.9–1.7 → стало немного медленнее
-            duration: () => gsap.utils.random(1.1, 1.9),
-
-            delay: () => gsap.utils.random(0, 0.35),
-            ease: 'back.out(1.7)',
-            stagger: { each: 0.03, from: 'random' },
-            onComplete: () => {
-                landed = true;
-                enableIdleBreath(shapes, { ampY: 10, rot: 6, scaleAmp: 0.035 });
+                    const cleanup = () => {
+                        preloader.style.display = 'none';
+                        preloader.removeEventListener('transitionend', cleanup);
+                        resolve();
+                    };
+                    preloader.addEventListener('transitionend', cleanup);
+                    setTimeout(cleanup, 1200);
+                }, 150);
             }
         });
+    }
 
+    /* ===========================================
+       Параллакс первого экрана (после прелоадера)
+       =========================================== */
+    function startHeroParallaxResponsive() {
+        if (!window.gsap) return;
 
-        // Параллакс на курсор — плавно и без дёрганий
-        const controllers = shapes.map(el => ({
-            mult: parseFloat(el.dataset.animation || '1'),
-            toX: gsap.quickTo(el, 'x', { duration: 0.6, ease: 'power2.out' }),
-            toY: gsap.quickTo(el, 'y', { duration: 0.6, ease: 'power2.out' })
-        }));
+        function initParallax({ containerSel, shapeSel, pointer = true }) {
+            const container = document.querySelector(containerSel);
+            if (!container) return () => { };
 
-        // одна функция на все указатели
-        const onPointerMove = (e) => {
-            if (!landed) return;
+            const shapes = Array.from(container.querySelectorAll(shapeSel));
+            if (!shapes.length) return () => { };
 
-            const cx = window.innerWidth / 2;
-            const cy = window.innerHeight / 2;
-            const dx = (e.clientX - cx);
-            const dy = (e.clientY - cy);
-
-            const strength = 0.04; // ~4% от расстояния до центра
-
-            controllers.forEach(({ mult, toX, toY }) => {
-                toX(dx * strength * mult);
-                toY(dy * strength * mult);
+            gsap.set(shapes, {
+                opacity: 0,
+                willChange: 'transform,opacity',
+                transform: 'translateZ(0)',
+                pointerEvents: 'none'
             });
-        };
 
-        // поддержка мыши/тача/пера
-        window.addEventListener('pointermove', onPointerMove, { passive: true });
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        // reduce-motion — отключаем движение
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            window.removeEventListener('pointermove', onPointerMove);
-            gsap.killTweensOf(shapes);
-            gsap.set(shapes, { clearProps: 'all' });
+            const waitImages = () =>
+                Promise.all(
+                    shapes.map(img =>
+                        img.complete
+                            ? Promise.resolve()
+                            : (img.decode?.().catch(() => { }) || new Promise(res => (img.onload = img.onerror = res)))
+                    )
+                );
+
+            let landed = false;
+            let pointerHandler = null;
+
+            function enableIdleBreath(nodes, { ampY = 10, rot = 6, scaleAmp = 0.035 } = {}) {
+                nodes.forEach(el => {
+                    const dur = gsap.utils.random(2.2, 3.8);
+                    const delay = gsap.utils.random(0, 0.4);
+                    const rotDir = gsap.utils.random([-1, 1]);
+                    gsap.to(el, {
+                        yPercent: `+=${ampY}`,
+                        rotation: `+=${rot * rotDir}`,
+                        scale: gsap.utils.random(1 - scaleAmp, 1 + scaleAmp),
+                        duration: dur,
+                        ease: 'sine.inOut',
+                        yoyo: true,
+                        repeat: -1,
+                        repeatDelay: delay,
+                        overwrite: false
+                    });
+                });
+            }
+
+            (async () => {
+                await waitImages();
+
+                if (reduce) {
+                    gsap.set(shapes, { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, clearProps: 'willChange' });
+                    return;
+                }
+
+                gsap.set(shapes, {
+                    x: () => gsap.utils.random(-160, 160),
+                    y: () => -window.innerHeight * gsap.utils.random(0.4, 1.2),
+                    rotation: () => gsap.utils.random(-220, 220),
+                    scale: () => gsap.utils.random(0.85, 1.15),
+                    opacity: 0
+                });
+
+                gsap.to(shapes, {
+                    x: 0,
+                    y: 0,
+                    rotation: 0,
+                    scale: 1,
+                    opacity: 1,
+                    duration: () => gsap.utils.random(1.1, 1.9),
+                    delay: () => gsap.utils.random(0, 0.35),
+                    ease: 'back.out(1.7)',
+                    stagger: { each: 0.03, from: 'random' },
+                    onComplete: () => {
+                        landed = true;
+                        enableIdleBreath(shapes, { ampY: 10, rot: 6, scaleAmp: 0.035 });
+                    }
+                });
+
+                const canPointerFollow =
+                    pointer && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+                if (canPointerFollow) {
+                    const controllers = shapes.map(el => ({
+                        mult: parseFloat(el.dataset.animation || '1'),
+                        toX: gsap.quickTo(el, 'x', { duration: 0.6, ease: 'power2.out' }),
+                        toY: gsap.quickTo(el, 'y', { duration: 0.6, ease: 'power2.out' })
+                    }));
+
+                    pointerHandler = e => {
+                        if (!landed) return;
+                        const cx = window.innerWidth / 2;
+                        const cy = window.innerHeight / 2;
+                        const dx = e.clientX - cx;
+                        const dy = e.clientY - cy;
+                        const strength = 0.04;
+                        controllers.forEach(({ mult, toX, toY }) => {
+                            toX(dx * strength * mult);
+                            toY(dy * strength * mult);
+                        });
+                    };
+
+                    window.addEventListener('pointermove', pointerHandler, { passive: true });
+                }
+            })();
+
+            return () => {
+                if (pointerHandler) window.removeEventListener('pointermove', pointerHandler);
+                gsap.killTweensOf(shapes);
+                gsap.set(shapes, { clearProps: 'all' });
+            };
         }
-    })();
+
+        const mm = gsap.matchMedia();
+
+        mm.add('(min-width: 769px)', () => {
+            const cleanup = initParallax({
+                containerSel: '.hero__paralax',
+                shapeSel: '.shape',
+                pointer: true
+            });
+            return cleanup;
+        });
+
+        mm.add('(max-width: 768px)', () => {
+            const cleanup = initParallax({
+                containerSel: '.hero__paralax_mobile',
+                shapeSel: '.shape-mobile',
+                pointer: false
+            });
+            return cleanup;
+        });
+    }
+
+    /* =============================================
+       Первый визит: показываем прелоадер один раз
+       ============================================= */
+    const FIRST_VISIT_KEY = 'preloader_seen_v1';
+
+    // try { localStorage.removeItem(FIRST_VISIT_KEY); } catch (e) {}
+
+    function skipPreloader() {
+        const preloader = document.querySelector('.preloader');
+        if (preloader) preloader.style.display = 'none';
+    }
+
+    function boot() {
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (isMobile || reduce) {
+            skipPreloader();
+            startHeroParallaxResponsive();
+            return;
+        }
+
+        const isFirstVisit = !localStorage.getItem(FIRST_VISIT_KEY);
+
+        if (isFirstVisit) {
+            runPreloader().then(() => {
+                try { localStorage.setItem(FIRST_VISIT_KEY, '1'); } catch (e) { }
+                startHeroParallaxResponsive();
+            });
+        } else {
+            skipPreloader();
+            startHeroParallaxResponsive();
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
+    }
+
+    // === Параллакс первого экрана (стартуем ПОСЛЕ прелоадера) ===
+    // function startHeroParallax() {
+    //     const container = document.querySelector('.hero__paralax');
+    //     if (!container) return;
+
+    //     const shapes = Array.from(container.querySelectorAll('.shape'));
+    //     if (!shapes.length) return;
+
+    //     const waitImages = () =>
+    //         Promise.all(
+    //             shapes.map(img =>
+    //                 img.complete
+    //                     ? Promise.resolve()
+    //                     : (img.decode?.().catch(() => { }) || new Promise(res => (img.onload = img.onerror = res)))
+    //             )
+    //         );
+
+    //     gsap.set(shapes, { willChange: 'transform', transform: 'translateZ(0)', pointerEvents: 'none' });
+
+    //     let landed = false;
+
+    //     function enableIdleBreath(nodes, { ampY = 10, rot = 6, scaleAmp = 0.035 } = {}) {
+    //         nodes.forEach(el => {
+    //             const dur = gsap.utils.random(2.2, 3.8);
+    //             const delay = gsap.utils.random(0, 0.4);
+    //             const rotDir = gsap.utils.random([-1, 1]);
+    //             gsap.to(el, {
+    //                 yPercent: `+=${ampY}`,
+    //                 rotation: `+=${rot * rotDir}`,
+    //                 scale: gsap.utils.random(1 - scaleAmp, 1 + scaleAmp),
+    //                 duration: dur,
+    //                 ease: 'sine.inOut',
+    //                 yoyo: true,
+    //                 repeat: -1,
+    //                 repeatDelay: delay,
+    //                 overwrite: false
+    //             });
+    //         });
+    //     }
+
+    //     (async () => {
+    //         await waitImages();
+
+    //         gsap.from(shapes, {
+    //             y: () => -window.innerHeight * gsap.utils.random(0.4, 1.2),
+    //             x: () => gsap.utils.random(-160, 160),
+    //             rotation: () => gsap.utils.random(-220, 220),
+    //             scale: () => gsap.utils.random(0.85, 1.15),
+    //             opacity: 0,
+    //             duration: () => gsap.utils.random(1.1, 1.9),
+    //             delay: () => gsap.utils.random(0, 0.35),
+    //             ease: 'back.out(1.7)',
+    //             stagger: { each: 0.03, from: 'random' },
+    //             onComplete: () => {
+    //                 landed = true;
+    //                 enableIdleBreath(shapes, { ampY: 10, rot: 6, scaleAmp: 0.035 });
+    //             }
+    //         });
+
+    //         const controllers = shapes.map(el => ({
+    //             mult: parseFloat(el.dataset.animation || '1'),
+    //             toX: gsap.quickTo(el, 'x', { duration: 0.6, ease: 'power2.out' }),
+    //             toY: gsap.quickTo(el, 'y', { duration: 0.6, ease: 'power2.out' })
+    //         }));
+
+    //         const onPointerMove = e => {
+    //             if (!landed) return;
+    //             const cx = window.innerWidth / 2;
+    //             const cy = window.innerHeight / 2;
+    //             const dx = (e.clientX - cx);
+    //             const dy = (e.clientY - cy);
+    //             const strength = 0.04;
+    //             controllers.forEach(({ mult, toX, toY }) => {
+    //                 toX(dx * strength * mult);
+    //                 toY(dy * strength * mult);
+    //             });
+    //         };
+
+    //         window.addEventListener('pointermove', onPointerMove, { passive: true });
+
+    //         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    //             window.removeEventListener('pointermove', onPointerMove);
+    //             gsap.killTweensOf(shapes);
+    //             gsap.set(shapes, { clearProps: 'all' });
+    //         }
+    //     })();
+    // }
 
 
 
 
+
+
+    // Бегущая строка на первом блоке 
     const topSlider = document.querySelector('.hero__line');
     const originalImages = Array.from(topSlider.querySelectorAll('img'));
 
     if (originalImages.length === 0) return;
 
-    // Создаем контейнер для трека
     const carouselTrack = document.createElement('div');
     carouselTrack.className = 'carousel-track';
     topSlider.innerHTML = '';
     topSlider.appendChild(carouselTrack);
 
-    // Минимальное количество элементов для плавной анимации
-    const minItems = 12; // Увеличиваем для большей плавности
+    const minItems = 12;
     let allItems = [];
 
-    // Повторяем изображения если их мало
     if (originalImages.length < minItems) {
         while (allItems.length < minItems) {
             originalImages.forEach(img => {
@@ -201,7 +405,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
         allItems = originalImages.map(img => img.cloneNode(true));
     }
 
-    // Добавляем элементы в трек (дважды для бесшовности)
     allItems.forEach(img => {
         const item = document.createElement('div');
         item.className = 'carousel-item';
@@ -209,7 +412,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
         carouselTrack.appendChild(item);
     });
 
-    // Дублируем элементы для бесшовного перехода
     allItems.forEach(img => {
         const item = document.createElement('div');
         item.className = 'carousel-item';
@@ -217,18 +419,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
         carouselTrack.appendChild(item);
     });
 
-    // Настраиваем анимацию
     const items = carouselTrack.querySelectorAll('.carousel-item');
     const itemWidth = items[0].offsetWidth + 30;
-    const segmentWidth = itemWidth * allItems.length; // Ширина одного сегмента (оригинальные элементы)
-    const totalWidth = segmentWidth * 2; // Общая ширина (оригинал + клон)
+    const segmentWidth = itemWidth * allItems.length;
+    const totalWidth = segmentWidth * 2;
 
-    // Скорость анимации (пикселей в секунду)
-    const pixelsPerSecond = 50; // Настройте под нужную скорость
+    const pixelsPerSecond = 50;
 
-    // Анимация с использованием модулятора для бесшовного цикла
     gsap.to(carouselTrack, {
-        x: -segmentWidth, // Двигаем на ширину одного сегмента
+        x: -segmentWidth,
         duration: segmentWidth / pixelsPerSecond,
         ease: "none",
         repeat: -1,
@@ -238,20 +437,27 @@ document.addEventListener("DOMContentLoaded", (event) => {
     });
 
 
+    // Слайдеры
     const result_section__swiper = new Swiper('.result-section__swiper', {
-        slidesPerView: 3,
+        slidesPerView: 1,
         loop: false,
         spaceBetween: 16,
         speed: 700,
+        breakpoints: {
+            769: { slidesPerView: 3 }
+        },
         navigation: {
             nextEl: '.result-section__swiper__next',
             prevEl: '.result-section__swiper__prev',
         },
+        pagination: {
+            el: '.result-section__swiper-pagination',
+            clickable: true,
+        }
 
     });
-
     const cases_ection__swiper = new Swiper('.cases-section__swiper', {
-        slidesPerView: 3,
+        slidesPerView: 1,
         loop: false,
         spaceBetween: 16,
         speed: 700,
@@ -259,11 +465,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
             nextEl: '.cases-section__swiper__next',
             prevEl: '.cases-section__swiper__prev',
         },
+        breakpoints: {
+            769: { slidesPerView: 3 }
+        },
+        pagination: {
+            el: '.cases-section__swiper-pagination',
+            clickable: true,
+        }
 
     });
-
     const reviews_section__swiper = new Swiper('.reviews-section__swiper', {
-        slidesPerView: 3,
+        slidesPerView: 1,
         loop: false,
         spaceBetween: 16,
         speed: 700,
@@ -272,22 +484,26 @@ document.addEventListener("DOMContentLoaded", (event) => {
             nextEl: '.reviews-section__swiper__next',
             prevEl: '.reviews-section__swiper__prev',
         },
-
+        breakpoints: {
+            769: { slidesPerView: 3 }
+        },
+        pagination: {
+            el: '.reviews-section__swiper-pagination',
+            clickable: true,
+        }
     });
 
 
 
 
-    document.querySelectorAll(".feedback-section__form-drop, .feedbackv2-section__form-drop").forEach(dropdown => {
+    document.querySelectorAll(".feedback-section__form-drop, .feedbackv2-section__form-drop, .feedback-popup__form-drop").forEach(dropdown => {
         const btn = dropdown.querySelector(".dropdown-btn");
         const content = dropdown.querySelector(".dropdown__content");
         if (!btn || !content) return;
 
         const open = () => {
             btn.classList.add("active");
-            // ставим точную высоту контента, чтобы анимировалось
             content.style.maxHeight = content.scrollHeight + "px";
-            // после анимации фиксируем auto — чтобы корректно реагировать на брейкпоинты
             const onEnd = (e) => {
                 if (e.propertyName === "max-height") {
                     content.style.maxHeight = "none";
@@ -298,10 +514,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
         };
 
         const close = () => {
-            // из auto → px → 0, чтобы была плавная анимация закрытия
             if (getComputedStyle(content).maxHeight === "none") {
                 content.style.maxHeight = content.scrollHeight + "px";
-                content.offsetHeight; // reflow
+                content.offsetHeight;
             }
             btn.classList.remove("active");
             content.style.maxHeight = "0px";
@@ -311,7 +526,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
             btn.classList.contains("active") ? close() : open();
         });
 
-        // изменение радио: подставить текст из label и закрыть
         content.addEventListener("change", (e) => {
             const input = e.target.closest(".radio-input");
             if (!input) return;
@@ -320,7 +534,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
             close();
         });
 
-        // на случай клика именно по лейблу (без события change)
         content.addEventListener("click", (e) => {
             const label = e.target.closest(".radio-label");
             if (!label) return;
@@ -370,153 +583,150 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     // === GOAL: параллакс-картинок при скролле ===
     (() => {
-        const goalSection = document.querySelector('.goal-section');
-        if (!goalSection) return;
+        if (!window.gsap || !window.ScrollTrigger) return;
+        const { gsap, ScrollTrigger } = window;
 
-        // разные “скорости” для слоёв (множитель смещения)
-        const goalLayers = [
-            { sel: '.goal-section__img-1', speed: 0.7 },
-            { sel: '.goal-section__img-2', speed: 1.2 },
-            { sel: '.goal-section__img-3', speed: 0.5 },
-            { sel: '.goal-section__img-4', speed: 1.0 },
-        ];
+        const section = document.querySelector('.goal-section');
+        if (!section) return;
 
-        // базовая амплитуда (px)
-        const goalBaseDist = 260;
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce) return;
 
-        goalLayers.forEach(({ sel, speed }) => {
-            const el = goalSection.querySelector(sel);
-            if (!el) return;
-
-            const dist = goalBaseDist * speed;
-
-            gsap.set(el, { willChange: 'transform', force3D: true });
-
-            gsap.fromTo(
-                el,
-                { y: -dist / 2 },
-                {
-                    y: dist / 2,
-                    ease: 'none',
-                    scrollTrigger: {
-                        trigger: goalSection,
-                        start: 'top bottom',
-                        end: 'bottom top',
-                        scrub: 0.6,
-                        invalidateOnRefresh: true
-                    }
-                }
+        const waitImages = root =>
+            Promise.all(
+                [...root.querySelectorAll('img')].map(img =>
+                    img.complete
+                        ? Promise.resolve()
+                        : (img.decode?.().catch(() => { }) ||
+                            new Promise(res => (img.onload = img.onerror = res)))
+                )
             );
+
+        function initParallax({ layers, baseDist }) {
+            const triggers = [];
+
+            layers.forEach(({ sel, speed }) => {
+                const el = section.querySelector(sel);
+                if (!el) return;
+
+                const dist = baseDist * speed;
+                gsap.set(el, { willChange: 'transform', force3D: true });
+
+                const tween = gsap.fromTo(
+                    el,
+                    { y: -dist / 2 },
+                    {
+                        y: dist / 2,
+                        ease: 'none',
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'top bottom',
+                            end: 'bottom top',
+                            scrub: 0.6,
+                            invalidateOnRefresh: true
+                        }
+                    }
+                );
+
+                triggers.push(tween.scrollTrigger);
+            });
+
+            return () => {
+                triggers.forEach(st => st && st.kill());
+            };
+        }
+
+        const mm = gsap.matchMedia();
+
+        mm.add('(min-width: 769px)', async () => {
+            await waitImages(section);
+
+            const cleanup = initParallax({
+                baseDist: 260,
+                layers: [
+                    { sel: '.goal-section__img-1', speed: 0.7 },
+                    { sel: '.goal-section__img-2', speed: 1.2 },
+                    { sel: '.goal-section__img-3', speed: 0.5 },
+                    { sel: '.goal-section__img-4', speed: 1.0 },
+                ]
+            });
+
+            ScrollTrigger.refresh();
+            return cleanup;
+        });
+
+        mm.add('(max-width: 768px)', async () => {
+            await waitImages(section);
+
+            const cleanup = initParallax({
+                baseDist: 180,
+                layers: [
+                    { sel: '.goal-section__img-mob-1', speed: 0.7 },
+                    { sel: '.goal-section__img-mob-2', speed: 1.2 },
+                    { sel: '.goal-section__img-mob-3', speed: 0.5 },
+                    { sel: '.goal-section__img-mob-4', speed: 1.0 },
+                ]
+            });
+
+            ScrollTrigger.refresh();
+            return cleanup;
         });
     })();
 
     // === PARTNERSHIP: лёгкое «дыхание» карточек (чуть больше амплитуда) ===
     (() => {
+        if (!window.gsap || !window.ScrollTrigger) return;
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-        const partnerSection = document.querySelector('.partnership-section');
-        if (!partnerSection) return;
+        const section = document.querySelector('.partnership-section');
+        if (!section) return;
 
-        const partnerCards = Array.from(
-            partnerSection.querySelectorAll('.partnership-section__item')
-        );
-        if (!partnerCards.length) return;
+        const mm = gsap.matchMedia();
 
-        gsap.set(partnerCards, { willChange: 'transform', force3D: true });
+        mm.add("(min-width: 769px)", () => {
+            const cards = Array.from(section.querySelectorAll('.partnership-section__item'));
+            if (!cards.length) return;
 
-        const partnerTweens = partnerCards.map(el => {
-            const dx = gsap.utils.random(-8, 8);      // было -6..6 → немного больше
-            const dy = gsap.utils.random(-10, 10);    // było -8..8 → немного больше
-            const drot = gsap.utils.random(-0.75, 0.75); // было -0.6..0.6
-            const dur = gsap.utils.random(3.2, 5.2);
-            const dly = gsap.utils.random(0, 0.6);
+            gsap.set(cards, { willChange: 'transform', force3D: true });
 
-            return gsap.to(el, {
-                x: `+=${dx}`,
-                y: `+=${dy}`,
-                rotation: `+=${drot}`,
-                duration: dur,
-                ease: 'sine.inOut',
-                yoyo: true,
-                repeat: -1,
-                delay: dly,
-                overwrite: false
+            const tweens = cards.map(el => {
+                const dx = gsap.utils.random(-8, 8);
+                const dy = gsap.utils.random(-10, 10);
+                const drot = gsap.utils.random(-0.75, 0.75);
+                const dur = gsap.utils.random(3.2, 5.2);
+                const dly = gsap.utils.random(0, 0.6);
+
+                return gsap.to(el, {
+                    x: `+=${dx}`,
+                    y: `+=${dy}`,
+                    rotation: `+=${drot}`,
+                    duration: dur,
+                    ease: 'sine.inOut',
+                    yoyo: true,
+                    repeat: -1,
+                    delay: dly,
+                    overwrite: false
+                });
             });
-        });
 
-        ScrollTrigger.create({
-            trigger: partnerSection,
-            start: 'top bottom',
-            end: 'bottom top',
-            onEnter: () => partnerTweens.forEach(t => t.resume()),
-            onEnterBack: () => partnerTweens.forEach(t => t.resume()),
-            onLeave: () => partnerTweens.forEach(t => t.pause()),
-            onLeaveBack: () => partnerTweens.forEach(t => t.pause())
+            const st = ScrollTrigger.create({
+                trigger: section,
+                start: 'top bottom',
+                end: 'bottom top',
+                onEnter: () => tweens.forEach(t => t.resume()),
+                onEnterBack: () => tweens.forEach(t => t.resume()),
+                onLeave: () => tweens.forEach(t => t.pause()),
+                onLeaveBack: () => tweens.forEach(t => t.pause())
+            });
+
+            return () => {
+                tweens.forEach(t => t.kill());
+                st.kill();
+                gsap.set(cards, { clearProps: "transform,will-change" });
+            };
         });
     })();
 
-    // // === USLUGI: sticky через GSAP (top: 100px), корректно и при загрузке "ниже" ===
-    // (() => {
-    //     if (!window.gsap || !window.ScrollTrigger) return;
-
-    //     const section = document.querySelector('.uslugi-section');
-    //     const wrap = section?.querySelector('.uslugi-section__wrap');
-    //     const leftContent = section?.querySelector('.uslugi-section__left__content');
-    //     if (!section || !wrap || !leftContent) return;
-
-    //     const TOP_OFFSET = 100; // как у sticky: top: 100px
-
-    //     // ждём картинки, чтобы размеры были точные
-    //     const waitImages = (root) =>
-    //         Promise.all(
-    //             [...root.querySelectorAll('img')].map(img =>
-    //                 img.complete
-    //                     ? Promise.resolve()
-    //                     : (img.decode?.().catch(() => { }) || new Promise(res => (img.onload = img.onerror = res)))
-    //             )
-    //         );
-
-    //     const docTop = el => el.getBoundingClientRect().top + window.scrollY;
-
-    //     const getStart = () => docTop(leftContent) - TOP_OFFSET;
-
-    //     // отлип, когда НИЗ leftContent совпал с НИЗОМ wrap:
-    //     // scrollY + TOP_OFFSET + Hc = wrapTop + wrapH
-    //     // => scrollY = wrapTop + wrapH - Hc - TOP_OFFSET
-    //     const getEnd = () =>
-    //         docTop(wrap) + wrap.offsetHeight - leftContent.offsetHeight - TOP_OFFSET;
-
-    //     let st;
-
-    //     const build = () => {
-    //         if (st) st.kill();
-
-    //         st = ScrollTrigger.create({
-    //             start: getStart,
-    //             end: getEnd,
-    //             pin: leftContent,
-    //             pinReparent: true,
-    //             invalidateOnRefresh: true,
-    //         });
-
-    //         // На случай, если пришли на страницу уже «ниже»
-    //         ScrollTrigger.refresh();
-    //         st.update();
-    //     };
-
-    //     Promise.all([waitImages(wrap), waitImages(leftContent)]).then(() => {
-    //         build();
-    //         // пересчёт при ресайзе/шрифты/ленивая загрузка
-    //         ScrollTrigger.addEventListener('refreshInit', () => st && st.refresh());
-    //         window.addEventListener('resize', () => ScrollTrigger.refresh(), { passive: true });
-    //     });
-
-    //     // ещё один refresh, когда всё (включая шрифты) загрузилось
-    //     window.addEventListener('load', () => {
-    //         ScrollTrigger.refresh();
-    //         st && st.update();
-    //     });
-    // })();
 
 
     // === USLUGI: ползунок справа + пин левого контента до касания низа ===
@@ -524,88 +734,110 @@ document.addEventListener("DOMContentLoaded", (event) => {
         if (!window.gsap || !window.ScrollTrigger) return;
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-        const section = document.querySelector('.uslugi-section');
-        const wrap = section?.querySelector('.uslugi-section__wrap');
-        const rightWrap = section?.querySelector('.uslugi-section__right__content');
-        const leftCol = section?.querySelector('.uslugi-section__left');
-        const leftContent = section?.querySelector('.uslugi-section__left__content');
-        if (!wrap || !rightWrap || !leftCol || !leftContent) return;
+        const { gsap, ScrollTrigger } = window;
 
-        // помогаем layout-у: фикс ширины левой колонки, чтобы не прыгала при pinSpacing:false
-        gsap.set(leftCol, { width: leftCol.getBoundingClientRect().width });
+        const mm = gsap.matchMedia();
 
-        // ждем картинки внутри колонок для корректных размеров
-        const waitImages = (root) =>
-            Promise.all([...root.querySelectorAll('img')].map(img =>
-                img.complete ? Promise.resolve()
-                    : (img.decode?.().catch(() => { }) || new Promise(res => (img.onload = img.onerror = res)))
-            ));
+        // Работает только на десктопе
+        mm.add('(min-width: 769px)', () => {
+            const section = document.querySelector('.uslugi-section');
+            const wrap = section?.querySelector('.uslugi-section__wrap');
+            const rightWrap = section?.querySelector('.uslugi-section__right__content');
+            const leftCol = section?.querySelector('.uslugi-section__left');
+            const leftContent = section?.querySelector('.uslugi-section__left__content');
+            if (!wrap || !rightWrap || !leftCol || !leftContent) return;
 
-        // ---------- 1) Прогресс-ползунок справа ----------
-        let maxY = 0, thumbH = 0;
-        const recalcThumb = () => {
-            const trackH = rightWrap.clientHeight;
-            const after = getComputedStyle(rightWrap, '::after');
-            thumbH = parseFloat(after.height) || 0;
-            maxY = Math.max(0, trackH - thumbH);
-        };
+            // фикс ширины левой колонки (чтоб не дёргалась при пине)
+            gsap.set(leftCol, { width: leftCol.getBoundingClientRect().width });
 
-        // ---------- 2) Пин левого контента до касания низа ----------
-        // сколько пикселей можем «везти» pinned-контент, пока низ контента не коснется низа левой колонки
-        const calcPinDistance = () => {
-            // всё в «внутренних» координатах колонки
-            const travel = leftCol.clientHeight - (leftContent.offsetTop + leftContent.offsetHeight);
-            return Math.max(0, travel); // если контент выше — пинить некуда
-        };
+            // дождаться картинок, чтобы размеры были точными
+            const waitImages = (root) =>
+                Promise.all(
+                    [...root.querySelectorAll('img')].map(img =>
+                        img.complete
+                            ? Promise.resolve()
+                            : (img.decode?.().catch(() => { }) || new Promise(res => (img.onload = img.onerror = res)))
+                    )
+                );
 
-        const init = () => {
-            // ползунок
-            recalcThumb();
-            const thumbST = ScrollTrigger.create({
-                trigger: wrap,
-                start: 'top top+=170',       // старт в 100px от верха
-                end: 'bottom bottom-=80',  // финиш в 50px от низа
-                scrub: 0.35,
-                onUpdate: self => {
-                    rightWrap.style.setProperty('--thumbY', (self.progress * maxY) + 'px');
-                },
-                onRefreshInit: recalcThumb,
-                invalidateOnRefresh: true
-            });
+            let maxY = 0, thumbH = 0;
+            const recalcThumb = () => {
+                const trackH = rightWrap.clientHeight;
+                const after = getComputedStyle(rightWrap, '::after');
+                thumbH = parseFloat(after.height) || 0;
+                maxY = Math.max(0, trackH - thumbH);
+            };
 
-            // пин левого контента до касания низа
-            gsap.set(leftContent, { willChange: 'transform', force3D: true });
+            // сколько можно везти левый блок в пине до касания низа
+            const calcPinDistance = () => {
+                const travel = leftCol.clientHeight - (leftContent.offsetTop + leftContent.offsetHeight);
+                return Math.max(0, travel);
+            };
 
-            // ПИН ЛЕВОГО КОНТЕНТА — максимально плавно
-            ScrollTrigger.create({
-                trigger: wrap,
-                start: 'top top+=170',                 // фиксируем, когда wrap на 100px ниже верха
-                end: () => '+=' + calcPinDistance(), // отлип — ровно при касании низа left__content о низ .uslugi-section__left
-                pin: leftContent,
-                pinSpacing: true,                      // ← включаем прокладку (гладко)
-                pinType: 'transform',                  // ← пин через transform (без рывков с Lenis)
-                anticipatePin: 2,                      // ← сгладить момент старта
-                invalidateOnRefresh: true
-            });
+            let thumbST; // сохраним, чтобы корректно чистить
+            let resizeHandler;
 
-            // пересчёты
-            const onResize = () => {
-                // обновим ширину колонки (флекс может менять)
-                gsap.set(leftCol, { width: leftCol.getBoundingClientRect().width });
-
+            const init = () => {
                 recalcThumb();
-                // подвинем ползунок в текущую позицию
-                rightWrap.style.setProperty('--thumbY', (thumbST.progress || 0) * maxY + 'px');
+
+                // прогресс-ползунок справа
+                thumbST = ScrollTrigger.create({
+                    trigger: wrap,
+                    start: 'top top+=170',
+                    end: 'bottom bottom-=80',
+                    scrub: 0.35,
+                    onUpdate: self => {
+                        rightWrap.style.setProperty('--thumbY', (self.progress * maxY) + 'px');
+                    },
+                    onRefreshInit: recalcThumb,
+                    invalidateOnRefresh: true
+                });
+
+                // пин левого контента до касания низа
+                gsap.set(leftContent, { willChange: 'transform', force3D: true });
+                ScrollTrigger.create({
+                    trigger: wrap,
+                    start: 'top top+=170',
+                    end: () => '+=' + calcPinDistance(),
+                    pin: leftContent,
+                    pinSpacing: true,
+                    pinType: 'transform',
+                    anticipatePin: 2,
+                    invalidateOnRefresh: true
+                });
+
+                // пересчёт на ресайз (в рамках десктопа)
+                resizeHandler = () => {
+                    gsap.set(leftCol, { width: leftCol.getBoundingClientRect().width });
+                    recalcThumb();
+                    if (thumbST) {
+                        rightWrap.style.setProperty('--thumbY', (thumbST.progress || 0) * maxY + 'px');
+                    }
+                    ScrollTrigger.refresh();
+                };
+                window.addEventListener('resize', resizeHandler, { passive: true });
 
                 ScrollTrigger.refresh();
             };
 
-            window.addEventListener('resize', onResize, { passive: true });
-            ScrollTrigger.refresh();
-        };
+            // старт после загрузки картинок
+            Promise.all([waitImages(wrap), waitImages(rightWrap), waitImages(leftCol)]).then(init);
 
-        Promise.all([waitImages(wrap), waitImages(rightWrap), waitImages(leftCol)]).then(init);
+            // cleanup вызывается автоматически при уходе из брейкпоинта (<769px)
+            return () => {
+                window.removeEventListener('resize', resizeHandler);
+                // убить все ScrollTrigger’ы, связанные с wrap
+                ScrollTrigger.getAll()
+                    .filter(st => st.trigger === wrap)
+                    .forEach(st => st.kill());
+                // очистить инлайны
+                rightWrap.style.removeProperty('--thumbY');
+                gsap.set(leftCol, { clearProps: 'width' });
+                gsap.set(leftContent, { clearProps: 'willChange,transform' });
+            };
+        });
     })();
+
 
 
 
@@ -705,6 +937,124 @@ document.addEventListener("DOMContentLoaded", (event) => {
             }
         });
     });
+
+    (() => {
+        const btn = document.querySelector('.header__menu-btn');
+        const menu = document.querySelector('.mobile-menu');
+        if (!btn || !menu) return;
+
+        const OPEN_CLASS = 'active';
+
+        function openMenu() {
+            btn.classList.add(OPEN_CLASS);
+            btn.setAttribute('aria-expanded', 'true');
+            menu.classList.add(OPEN_CLASS);
+        }
+
+        function closeMenu() {
+            btn.classList.remove(OPEN_CLASS);
+            btn.setAttribute('aria-expanded', 'false');
+            menu.classList.remove(OPEN_CLASS);
+        }
+
+        function toggleMenu() {
+            if (menu.classList.contains(OPEN_CLASS)) closeMenu();
+            else openMenu();
+        }
+
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleMenu();
+        });
+
+        menu.addEventListener('click', (e) => {
+            if (e.target.closest('a, .mobile-menu__btn')) closeMenu();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && menu.classList.contains(OPEN_CLASS)) closeMenu();
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!menu.classList.contains(OPEN_CLASS)) return;
+            const clickInsideMenu = e.target.closest('.mobile-menu');
+            const clickOnButton = e.target.closest('.header__menu-btn');
+            if (!clickInsideMenu && !clickOnButton) closeMenu();
+        });
+
+        const mq = window.matchMedia('(min-width: 1025px)');
+        const onBpChange = () => { if (mq.matches) closeMenu(); };
+        mq.addEventListener?.('change', onBpChange);
+        mq.addListener?.(onBpChange);
+    })();
+
+
+
+    (() => {
+        const popup = document.querySelector('.feedback-popup');
+        const bg = document.querySelector('.popup-background');
+        const closeEl = popup?.querySelector('.feedback-popup__close');
+        const openBtns = document.querySelectorAll('.feedback-popup__open');
+
+        if (!popup || openBtns.length === 0) return;
+
+        const ACTIVE = 'active';
+
+        function lockScroll() {
+            if (window.lenis && typeof window.lenis.stop === 'function') {
+                window.lenis.stop();
+            } else {
+                window.__lenisActive__ = false;
+            }
+            document.body.classList.add('no-scroll');
+            document.documentElement.classList.add('no-scroll');
+        }
+
+        function unlockScroll() {
+            if (window.lenis && typeof window.lenis.start === 'function') {
+                window.lenis.start();
+            } else {
+                window.__lenisActive__ = true;
+            }
+            document.body.classList.remove('no-scroll');
+            document.documentElement.classList.remove('no-scroll');
+        }
+
+        function openPopup() {
+            popup.classList.add(ACTIVE);
+            bg.classList.add(ACTIVE);
+            lockScroll();
+
+        }
+
+        function closePopup() {
+            popup.classList.remove(ACTIVE);
+            bg.classList.remove(ACTIVE);
+            unlockScroll();
+        }
+
+        openBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openPopup();
+            });
+        });
+
+        closeEl?.addEventListener('click', (e) => {
+            e.preventDefault();
+            closePopup();
+        });
+
+        bg.addEventListener('click', closePopup);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && popup.classList.contains(ACTIVE)) {
+                closePopup();
+            }
+        });
+
+    })();
+
 
 
 });
