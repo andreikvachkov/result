@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.8/dist/lenis.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.3.8/dist/lenis.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header__wrap">
+                <div class="header__left">
+                    <a href="/" class="header__logo">
+                        <img src="assets/images/logo.svg">
+                    </a>
+                </div>
+
+                <div class="header__center">
+                    <nav class="header__nav">
+                        <ul class="header__nav-list">
+                            <li class="header__nav-item"><a class="header__nav-link" href="">Услуги</a></li>
+                            <li class="header__nav-item"><a class="header__nav-link" href="">О компании</a></li>
+                            <li class="header__nav-item"><a class="header__nav-link" href="">Методика работы</a></li>
+                            <li class="header__nav-item"><a class="header__nav-link" href="">Кейсы</a></li>
+                            <li class="header__nav-item"><a class="header__nav-link" href="">Блог</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="header__right">
+                    <button class="header__btn feedback-popup__audit-open">Проверить эффективность рекламы</button>
+                    <button class="header__menu-btn">
+
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="cases-page">
+        <div class="container">
+            <div class="cases-page__wrap">
+                <div class="cases-page__top">
+                    <div class="breadcrumbs">
+                        <ul>
+                            <li>
+                                <a href="">
+                                    Главная
+                                </a>
+                            </li>
+                            <li>
+                                Кейсы
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="cases-page__top__content">
+                        <h1 class="cases-page__title">
+                            Фокус на результатах
+                        </h1>
+                        <div class="cases-page__text">
+                            Показываем как наши стратегии и решения помогают бизнесу расти
+                        </div>
+                        <div class="cases-page__filter">
+                            <div class="radio-item">
+                                <input type="radio" class="radio-input" id="cases__filter-1" name="cases__filter"
+                                    checked>
+                                <label for="cases__filter-1" class="radio-label">Все статьи</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" class="radio-input" id="cases__filter-2" name="cases__filter">
+                                <label for="cases__filter-2" class="radio-label">Новости Digital</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" class="radio-input" id="cases__filter-3" name="cases__filter">
+                                <label for="cases__filter-3" class="radio-label">Категория 1</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" class="radio-input" id="cases__filter-4" name="cases__filter">
+                                <label for="cases__filter-4" class="radio-label">Категория 2</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cases-page__main">
+                    <a href="" class="cases-page__item">
+                        <div class="cases-page__item__top">
+                            <div class="cases-page__item__top__item">
+                                <p class="value">
+                                    В 3 раза
+                                </p>
+                                <p class="text">
+                                    Увеличили количество обращений
+                                </p>
+                            </div>
+                            <div class="cases-page__item__top__item">
+                                <p class="value">
+                                    На 230%
+                                </p>
+                                <p class="text">
+                                    Увеличение количества конверсии
+                                </p>
+                            </div>
+                        </div>
+                        <div class="cases-page__item__bottom">
+                            <div class="cases-page__item__text">
+                                Крупная транспортно - <br>
+                                логистическая компания
+                            </div>
+                        </div>
+                        <div class="cases-page__item__btn-ico">
+
+                        </div>
+                    </a>
+                    <a href="" class="cases-page__item">
+                        <div class="cases-page__item__top">
+                            <div class="cases-page__item__top__item">
+                                <p class="value">
+                                    В 3 раза
+                                </p>
+                                <p class="text">
+                                    Увеличили количество обращений
+                                </p>
+                            </div>
+                            <div class="cases-page__item__top__item">
+                                <p class="value">
+                                    На 230%
+                                </p>
+                                <p class="text">
+                                    Увеличение количества конверсии
+                                </p>
+                            </div>
+                        </div>
+                        <div class="cases-page__item__bottom">
+                            <div class="cases-page__item__text">
+                                Крупная транспортно - <br>
+                                логистическая компания
+                            </div>
+                        </div>
+                        <div class="cases-page__item__btn-ico">
+
+                        </div>
+                    </a>
+                    <a href="" class="cases-page__item">
+                        <div class="cases-page__item__top">
+                            <div class="cases-page__item__top__item">
+                                <p class="value">
+                                    В 3 раза
+                                </p>
+                                <p class="text">
+                                    Увеличили количество обращений
+                                </p>
+                            </div>
+                            <div class="cases-page__item__top__item">
+                                <p class="value">
+                                    На 230%
+                                </p>
+                                <p class="text">
+                                    Увеличение количества конверсии
+                                </p>
+                            </div>
+                        </div>
+                        <div class="cases-page__item__bottom">
+                            <div class="cases-page__item__text">
+                                Крупная транспортно - <br>
+                                логистическая компания
+                            </div>
+                        </div>
+                        <div class="cases-page__item__btn-ico">
+
+                        </div>
+                    </a>
+                    <a href="" class="cases-page__item">
+                        <div class="cases-page__item__top">
+                            <div class="cases-page__item__top__item">
+                                <p class="value">
+                                    В 3 раза
+                                </p>
+                                <p class="text">
+                                    Увеличили количество обращений
+                                </p>
+                            </div>
+                            <div class="cases-page__item__top__item">
+                                <p class="value">
+                                    На 230%
+                                </p>
+                                <p class="text">
+                                    Увеличение количества конверсии
+                                </p>
+                            </div>
+                        </div>
+                        <div class="cases-page__item__bottom">
+                            <div class="cases-page__item__text">
+                                Крупная транспортно - <br>
+                                логистическая компания
+                            </div>
+                        </div>
+                        <div class="cases-page__item__btn-ico">
+
+                        </div>
+                    </a>
+                    <a href="" class="cases-page__item">
+                        <div class="cases-page__item__top">
+                            <div class="cases-page__item__top__item">
+                                <p class="value">
+                                    В 3 раза
+                                </p>
+                                <p class="text">
+                                    Увеличили количество обращений
+                                </p>
+                            </div>
+                            <div class="cases-page__item__top__item">
+                                <p class="value">
+                                    На 230%
+                                </p>
+                                <p class="text">
+                                    Увеличение количества конверсии
+                                </p>
+                            </div>
+                        </div>
+                        <div class="cases-page__item__bottom">
+                            <div class="cases-page__item__text">
+                                Крупная транспортно - <br>
+                                логистическая компания
+                            </div>
+                        </div>
+                        <div class="cases-page__item__btn-ico">
+
+                        </div>
+                    </a>
+                    <div class="cases-page__item-last">
+                        <div class="cases-page__item-last__text">
+                            Хочу такие <br>
+                            же результаты
+                        </div>
+                        <button class="cases-page__item-last__btn">
+                            Связаться с Result – Agency
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer>
+        <div class="container">
+            <div class="footer__wrap">
+                <div class="footer__top">
+                    <div class="col-left">
+                        <a href="" class="footer__logo">
+                            <img src="assets/images/logo.svg" alt="">
+                        </a>
+                        <div class="footer__subtitle">
+                            digital агентство управления результатами
+                        </div>
+                        <button class="footer__feedback-btn feedback-popup__presentation-open">
+                            Запустить рекламу
+                        </button>
+                        <div class="col-left__bottom">
+                            <a href="" class="telegram">
+                                Telegram
+                            </a>
+                            <a href="mailto:info@result-agency.ru" class="pochta" target="_blank">
+                                info@result-agency.ru
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-center">
+                        <p class="col-center__name">
+                            Навигация
+                        </p>
+                        <div class="col-center__content">
+                            <nav>
+                                <ul>
+                                    <li>
+                                        <a href="">
+                                            Контекстная реклама
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            SEO – продвижение
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            Медийная реклама
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            Таргетированная реклама
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            Маркетплейсы
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            Управление репутацией
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            РМП
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <nav>
+                                <ul>
+                                    <li>
+                                        <a href="">
+                                            О компании
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            Методика работы
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            Кейсы
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            Блог
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="col-right">
+                        <p class="col-right__name">
+                            Контакты
+                        </p>
+                        <div class="col-right__bottom">
+                            <div class="col-right__time">
+                                Понедельник–пятница <br>
+                                10:00–19:00 МСК
+                            </div>
+                            <a href="tel:+74952669996" class="col-right__tel" target="_blank">
+                                +7 (495) 266-99-96
+                            </a>
+                            <div class="col-right__text">
+                                ООО «Результат» <br>
+                                ИНН: 7725414026 <br>
+                                ОГРН: 1187746011760
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer__bottom">
+                    <a href="">
+                        Согласие на обработку персональных данных
+                    </a>
+                    <a href="">
+                        Политика конфиденциальности
+                    </a>
+                    <a href="">
+                        Согласие на обработку персональных данных, собираемых метрическими системами
+                    </a>
+                    <a href="">
+                        Пользовательское соглашение
+                    </a>
+                    <a href="">
+                        Cookies
+                    </a>
+                    <a href="https://effectweb.ru/" class="effect" target="_blank">
+                        Разработка сайта: Effect.Web
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div class="mobile-menu">
+        <div class="container">
+            <div class="mobile-menu__wrap">
+                <nav>
+                    <ul>
+                        <li>
+                            <a href="">
+                                Услуги
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                О компании
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                Методика работы
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                Кейсы
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                Блог
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <button class="mobile-menu__btn feedback-popup__audit-open">
+                    Проверить эффективность рекламы
+                </button>
+                <div class="mobile-menu__bottom">
+                    <div class="mobile-menu__contact">
+                        <a href="" class="telegram">
+                            Telegram
+                        </a>
+                        <a href="mailto:info@result-agency.ru" class="pochta">
+                            info@result-agency.ru
+                        </a>
+                    </div>
+                    <div class="mobile-menu__info">
+                        <div class="mobile-menu__time">
+                            Понедельник–пятница <br>
+                            10:00–19:00 МСК
+                        </div>
+                        <a href="tel:+74952669996" class="mobile-menu__tel">
+                            +7 (495) 266-99-96
+                        </a>
+                        <div class="mobile-menu__text">
+                            ООО «Результат» <br>
+                            ИНН: 7725414026 <br>
+                            ОГРН: 1187746011760 <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="popup-background"></div>
+    <div class="feedback-popup" id="popup-lead">
+        <button class="feedback-popup__close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                <path
+                    d="M22.391 6.28715L14.9998 13.6784L7.60853 6.28715C7.43075 6.12448 7.19707 6.03666 6.95616 6.042C6.71526 6.04734 6.48569 6.14542 6.3153 6.31581C6.14491 6.4862 6.04683 6.71576 6.0415 6.95667C6.03616 7.19758 6.12397 7.43126 6.28665 7.60903L13.6741 15.0003L6.28477 22.3897C6.1945 22.4757 6.12233 22.5789 6.07252 22.6932C6.0227 22.8076 5.99625 22.9307 5.9947 23.0554C5.99316 23.1801 6.01656 23.3038 6.06352 23.4193C6.11049 23.5349 6.18008 23.6398 6.2682 23.7281C6.35632 23.8163 6.46119 23.8861 6.57664 23.9332C6.6921 23.9803 6.81582 24.0039 6.94051 24.0025C7.06521 24.0012 7.18838 23.9749 7.30278 23.9252C7.41717 23.8756 7.52049 23.8036 7.60665 23.7134L14.9998 16.324L22.391 23.7153C22.5688 23.878 22.8025 23.9658 23.0434 23.9604C23.2843 23.9551 23.5139 23.857 23.6842 23.6866C23.8546 23.5162 23.9527 23.2867 23.9581 23.0458C23.9634 22.8049 23.8756 22.5712 23.7129 22.3934L16.3216 15.0022L23.7129 7.60903C23.8032 7.523 23.8753 7.41978 23.9252 7.30546C23.975 7.19113 24.0014 7.068 24.003 6.94331C24.0045 6.81861 23.9811 6.69486 23.9342 6.57934C23.8872 6.46381 23.8176 6.35884 23.7295 6.2706C23.6414 6.18236 23.5365 6.11262 23.421 6.06549C23.3056 6.01836 23.1819 5.99478 23.0572 5.99615C22.9325 5.99752 22.8093 6.0238 22.6949 6.07345C22.5805 6.12311 22.4772 6.19513 22.391 6.28528V6.28715Z"
+                    fill="black" />
+            </svg>
+        </button>
+        <div class="feedback-popup__content">
+            <form action="">
+                <div class="feedback-popup__form-top">
+                    <p class="feedback-popup__form-title">
+                        Разработаем стратегию эффективного продвижения вашего бизнеса
+                    </p>
+                    <p class="feedback-popup__form-text">
+                        Заполните контактные данные и мы свяжемся с вами для уточнения деталей
+                    </p>
+                </div>
+                <div class="feedback-popup__form-content">
+                    <div class="feedback-popup__form-inputs">
+                        <div class="feedback-popup__form-input">
+                            <input type="text" placeholder="Ваше имя*">
+                            <p class="error">
+                                Ошибка
+                            </p>
+                        </div>
+                        <div class="feedback-popup__form-input">
+                            <input type="text" placeholder="Телефон*">
+                            <p class="error">
+                                Ошибка
+                            </p>
+                        </div>
+
+                        <div class="feedback-popup__form-drop">
+                            <button type="button" class="dropdown-btn">
+                                Выберите способ связи
+                            </button>
+                            <div class="dropdown__content">
+                                <div class="radio-item">
+                                    <input type="radio" class="radio-input" id="feedback-popup__form-socies-1"
+                                        name="feedback-popup__form-socies" value="Telegram">
+                                    <label for="feedback-popup__form-socies-1" class="radio-label">Telegram</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" class="radio-input" id="feedback-popup__form-socies-2"
+                                        name="feedback-popup__form-socies" value="WhatsApp">
+                                    <label for="feedback-popup__form-socies-2" class="radio-label">WhatsApp</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" class="radio-input" id="feedback-popup__form-socies-3"
+                                        name="feedback-popup__form-socies" value="Звонок">
+                                    <label for="feedback-popup__form-socies-3" class="radio-label">Звонок</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" class="checkbox-input" id="feedback-popup__form-policy"
+                            name="feedback-popup__form-policy">
+                        <label for="feedback-popup__form-policy" class="checkbox-label">
+                            Нажимая «Отправить», я принимаю условия <a href="">Пользовательского соглашения</a>, даю <a
+                                href="">Согласие на обработку персональных данных</a> в соответствии с <a
+                                href="">Политикой конфиденциальности</a>
+                        </label>
+                    </div>
+                    <button class="feedback-popup__form-submit">
+                        Отправить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="feedback-popup" id="popup-audit">
+        <button class="feedback-popup__close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                <path
+                    d="M22.391 6.28715L14.9998 13.6784L7.60853 6.28715C7.43075 6.12448 7.19707 6.03666 6.95616 6.042C6.71526 6.04734 6.48569 6.14542 6.3153 6.31581C6.14491 6.4862 6.04683 6.71576 6.0415 6.95667C6.03616 7.19758 6.12397 7.43126 6.28665 7.60903L13.6741 15.0003L6.28477 22.3897C6.1945 22.4757 6.12233 22.5789 6.07252 22.6932C6.0227 22.8076 5.99625 22.9307 5.9947 23.0554C5.99316 23.1801 6.01656 23.3038 6.06352 23.4193C6.11049 23.5349 6.18008 23.6398 6.2682 23.7281C6.35632 23.8163 6.46119 23.8861 6.57664 23.9332C6.6921 23.9803 6.81582 24.0039 6.94051 24.0025C7.06521 24.0012 7.18838 23.9749 7.30278 23.9252C7.41717 23.8756 7.52049 23.8036 7.60665 23.7134L14.9998 16.324L22.391 23.7153C22.5688 23.878 22.8025 23.9658 23.0434 23.9604C23.2843 23.9551 23.5139 23.857 23.6842 23.6866C23.8546 23.5162 23.9527 23.2867 23.9581 23.0458C23.9634 22.8049 23.8756 22.5712 23.7129 22.3934L16.3216 15.0022L23.7129 7.60903C23.8032 7.523 23.8753 7.41978 23.9252 7.30546C23.975 7.19113 24.0014 7.068 24.003 6.94331C24.0045 6.81861 23.9811 6.69486 23.9342 6.57934C23.8872 6.46381 23.8176 6.35884 23.7295 6.2706C23.6414 6.18236 23.5365 6.11262 23.421 6.06549C23.3056 6.01836 23.1819 5.99478 23.0572 5.99615C22.9325 5.99752 22.8093 6.0238 22.6949 6.07345C22.5805 6.12311 22.4772 6.19513 22.391 6.28528V6.28715Z"
+                    fill="black" />
+            </svg>
+        </button>
+        <div class="feedback-popup__content">
+            <form action="">
+                <div class="feedback-popup__form-top">
+                    <p class="feedback-popup__form-title">
+                        Заявка на бесплатный аудит
+                    </p>
+                    <p class="feedback-popup__form-text">
+                        Аудит эффективности, рекламной кампании поможет выявить слабые места, усилить показатели и
+                        сэкономить средства
+                    </p>
+                </div>
+                <div class="feedback-popup__form-content">
+                    <div class="feedback-popup__form-inputs">
+                        <div class="feedback-popup__form-input">
+                            <input type="text" placeholder="Ваше имя*">
+                            <p class="error">
+                                Ошибка
+                            </p>
+                        </div>
+                        <div class="feedback-popup__form-input">
+                            <input type="text" placeholder="Телефон*">
+                            <p class="error">
+                                Ошибка
+                            </p>
+                        </div>
+
+                        <div class="feedback-popup__form-drop">
+                            <button type="button" class="dropdown-btn">
+                                Выберите способ связи
+                            </button>
+                            <div class="dropdown__content">
+                                <div class="radio-item">
+                                    <input type="radio" class="radio-input" id="feedback-popup__form-socies-1"
+                                        name="feedback-popup__form-socies" value="Telegram">
+                                    <label for="feedback-popup__form-socies-1" class="radio-label">Telegram</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" class="radio-input" id="feedback-popup__form-socies-2"
+                                        name="feedback-popup__form-socies" value="WhatsApp">
+                                    <label for="feedback-popup__form-socies-2" class="radio-label">WhatsApp</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" class="radio-input" id="feedback-popup__form-socies-3"
+                                        name="feedback-popup__form-socies" value="Звонок">
+                                    <label for="feedback-popup__form-socies-3" class="radio-label">Звонок</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" class="checkbox-input" id="feedback-popup__form-policy"
+                            name="feedback-popup__form-policy">
+                        <label for="feedback-popup__form-policy" class="checkbox-label">
+                            Нажимая «Отправить», я принимаю условия <a href="">Пользовательского соглашения</a>, даю <a
+                                href="">Согласие на обработку персональных данных</a> в соответствии с <a
+                                href="">Политикой конфиденциальности</a>
+                        </label>
+                    </div>
+                    <button class="feedback-popup__form-submit">
+                        Отправить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="feedback-popup" id="popup-presentation">
+        <button class="feedback-popup__close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                <path
+                    d="M22.391 6.28715L14.9998 13.6784L7.60853 6.28715C7.43075 6.12448 7.19707 6.03666 6.95616 6.042C6.71526 6.04734 6.48569 6.14542 6.3153 6.31581C6.14491 6.4862 6.04683 6.71576 6.0415 6.95667C6.03616 7.19758 6.12397 7.43126 6.28665 7.60903L13.6741 15.0003L6.28477 22.3897C6.1945 22.4757 6.12233 22.5789 6.07252 22.6932C6.0227 22.8076 5.99625 22.9307 5.9947 23.0554C5.99316 23.1801 6.01656 23.3038 6.06352 23.4193C6.11049 23.5349 6.18008 23.6398 6.2682 23.7281C6.35632 23.8163 6.46119 23.8861 6.57664 23.9332C6.6921 23.9803 6.81582 24.0039 6.94051 24.0025C7.06521 24.0012 7.18838 23.9749 7.30278 23.9252C7.41717 23.8756 7.52049 23.8036 7.60665 23.7134L14.9998 16.324L22.391 23.7153C22.5688 23.878 22.8025 23.9658 23.0434 23.9604C23.2843 23.9551 23.5139 23.857 23.6842 23.6866C23.8546 23.5162 23.9527 23.2867 23.9581 23.0458C23.9634 22.8049 23.8756 22.5712 23.7129 22.3934L16.3216 15.0022L23.7129 7.60903C23.8032 7.523 23.8753 7.41978 23.9252 7.30546C23.975 7.19113 24.0014 7.068 24.003 6.94331C24.0045 6.81861 23.9811 6.69486 23.9342 6.57934C23.8872 6.46381 23.8176 6.35884 23.7295 6.2706C23.6414 6.18236 23.5365 6.11262 23.421 6.06549C23.3056 6.01836 23.1819 5.99478 23.0572 5.99615C22.9325 5.99752 22.8093 6.0238 22.6949 6.07345C22.5805 6.12311 22.4772 6.19513 22.391 6.28528V6.28715Z"
+                    fill="black" />
+            </svg>
+        </button>
+        <div class="feedback-popup__content">
+            <form action="">
+                <div class="feedback-popup__form-top">
+                    <p class="feedback-popup__form-title">
+                        Запустим рекламную кампанию <br> для роста вашего бизнеса
+                    </p>
+                    <p class="feedback-popup__form-text">
+                        Заполните контактные данные и мы свяжемся с вами для уточнения деталей
+                    </p>
+                </div>
+                <div class="feedback-popup__form-content">
+                    <div class="feedback-popup__form-inputs">
+                        <div class="feedback-popup__form-input">
+                            <input type="text" placeholder="Ваше имя*">
+                            <p class="error">
+                                Ошибка
+                            </p>
+                        </div>
+                        <div class="feedback-popup__form-input">
+                            <input type="text" placeholder="Телефон*">
+                            <p class="error">
+                                Ошибка
+                            </p>
+                        </div>
+
+                        <div class="feedback-popup__form-drop">
+                            <button type="button" class="dropdown-btn">
+                                Выберите способ связи
+                            </button>
+                            <div class="dropdown__content">
+                                <div class="radio-item">
+                                    <input type="radio" class="radio-input" id="feedback-popup__form-socies-1"
+                                        name="feedback-popup__form-socies" value="Telegram">
+                                    <label for="feedback-popup__form-socies-1" class="radio-label">Telegram</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" class="radio-input" id="feedback-popup__form-socies-2"
+                                        name="feedback-popup__form-socies" value="WhatsApp">
+                                    <label for="feedback-popup__form-socies-2" class="radio-label">WhatsApp</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" class="radio-input" id="feedback-popup__form-socies-3"
+                                        name="feedback-popup__form-socies" value="Звонок">
+                                    <label for="feedback-popup__form-socies-3" class="radio-label">Звонок</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" class="checkbox-input" id="feedback-popup__form-policy"
+                            name="feedback-popup__form-policy">
+                        <label for="feedback-popup__form-policy" class="checkbox-label">
+                            Нажимая «Отправить заявку», я принимаю условия <a href="">Пользовательского соглашения</a>,
+                            даю <a href="">Согласие на обработку персональных данных</a> в соответствии с <a
+                                href="">Политикой конфиденциальности</a>
+                        </label>
+                    </div>
+                    <button class="feedback-popup__form-submit">
+                        Отправить заявку
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="succses-popup">
+        <button class="succses-popup__close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                <path
+                    d="M22.391 6.28715L14.9998 13.6784L7.60853 6.28715C7.43075 6.12448 7.19707 6.03666 6.95616 6.042C6.71526 6.04734 6.48569 6.14542 6.3153 6.31581C6.14491 6.4862 6.04683 6.71576 6.0415 6.95667C6.03616 7.19758 6.12397 7.43126 6.28665 7.60903L13.6741 15.0003L6.28477 22.3897C6.1945 22.4757 6.12233 22.5789 6.07252 22.6932C6.0227 22.8076 5.99625 22.9307 5.9947 23.0554C5.99316 23.1801 6.01656 23.3038 6.06352 23.4193C6.11049 23.5349 6.18008 23.6398 6.2682 23.7281C6.35632 23.8163 6.46119 23.8861 6.57664 23.9332C6.6921 23.9803 6.81582 24.0039 6.94051 24.0025C7.06521 24.0012 7.18838 23.9749 7.30278 23.9252C7.41717 23.8756 7.52049 23.8036 7.60665 23.7134L14.9998 16.324L22.391 23.7153C22.5688 23.878 22.8025 23.9658 23.0434 23.9604C23.2843 23.9551 23.5139 23.857 23.6842 23.6866C23.8546 23.5162 23.9527 23.2867 23.9581 23.0458C23.9634 22.8049 23.8756 22.5712 23.7129 22.3934L16.3216 15.0022L23.7129 7.60903C23.8032 7.523 23.8753 7.41978 23.9252 7.30546C23.975 7.19113 24.0014 7.068 24.003 6.94331C24.0045 6.81861 23.9811 6.69486 23.9342 6.57934C23.8872 6.46381 23.8176 6.35884 23.7295 6.2706C23.6414 6.18236 23.5365 6.11262 23.421 6.06549C23.3056 6.01836 23.1819 5.99478 23.0572 5.99615C22.9325 5.99752 22.8093 6.0238 22.6949 6.07345C22.5805 6.12311 22.4772 6.19513 22.391 6.28528V6.28715Z"
+                    fill="black" />
+            </svg>
+        </button>
+        <div class="succses-popup__content">
+            <div class="succses-popup__title">
+                Ценим ваше внимание
+            </div>
+            <div class="succses-popup__text">
+                Заявка принята. Менеджер свяжется с вами в течение рабочего времени
+                10:00–19:00 МСК пн-пт
+            </div>
+            <button class="succses-popup__btn">
+                Вернуться на главную
+            </button>
+        </div>
+    </div>
+    <div class="partner-popup">
+        <button class="partner-popup__close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                <path
+                    d="M22.391 6.28715L14.9998 13.6784L7.60853 6.28715C7.43075 6.12448 7.19707 6.03666 6.95616 6.042C6.71526 6.04734 6.48569 6.14542 6.3153 6.31581C6.14491 6.4862 6.04683 6.71576 6.0415 6.95667C6.03616 7.19758 6.12397 7.43126 6.28665 7.60903L13.6741 15.0003L6.28477 22.3897C6.1945 22.4757 6.12233 22.5789 6.07252 22.6932C6.0227 22.8076 5.99625 22.9307 5.9947 23.0554C5.99316 23.1801 6.01656 23.3038 6.06352 23.4193C6.11049 23.5349 6.18008 23.6398 6.2682 23.7281C6.35632 23.8163 6.46119 23.8861 6.57664 23.9332C6.6921 23.9803 6.81582 24.0039 6.94051 24.0025C7.06521 24.0012 7.18838 23.9749 7.30278 23.9252C7.41717 23.8756 7.52049 23.8036 7.60665 23.7134L14.9998 16.324L22.391 23.7153C22.5688 23.878 22.8025 23.9658 23.0434 23.9604C23.2843 23.9551 23.5139 23.857 23.6842 23.6866C23.8546 23.5162 23.9527 23.2867 23.9581 23.0458C23.9634 22.8049 23.8756 22.5712 23.7129 22.3934L16.3216 15.0022L23.7129 7.60903C23.8032 7.523 23.8753 7.41978 23.9252 7.30546C23.975 7.19113 24.0014 7.068 24.003 6.94331C24.0045 6.81861 23.9811 6.69486 23.9342 6.57934C23.8872 6.46381 23.8176 6.35884 23.7295 6.2706C23.6414 6.18236 23.5365 6.11262 23.421 6.06549C23.3056 6.01836 23.1819 5.99478 23.0572 5.99615C22.9325 5.99752 22.8093 6.0238 22.6949 6.07345C22.5805 6.12311 22.4772 6.19513 22.391 6.28528V6.28715Z"
+                    fill="black" />
+            </svg>
+        </button>
+        <div class="partner-popup__content">
+            <div class="partner-popup__title">
+                Сайты-партнёры Яндекса
+            </div>
+            <div class="partner-popup__text">
+                Сайты-партнёры Яндекса — это более 50 000 площадок, размещающих рекламные блоки в рамках Рекламной сети
+                Яндекса (РСЯ). В её состав входят сервисы Яндекса, мобильные приложения, сайты внешних компаний, а также
+                приложения для Smart TV
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/app.js"></script>
+</body>
+
+</html>
