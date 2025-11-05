@@ -125,7 +125,7 @@ header.scroll::after {
     z-index: 2;
 }
 .header__left {
-    width: 25%;
+    width: 34%;
     display: flex;
     align-items: center;
 }
@@ -136,7 +136,7 @@ header.scroll::after {
     width: 8.875rem;
 }
 .header__center {
-    width: 50%;
+    width: 32%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -148,7 +148,7 @@ header.scroll::after {
 .header__nav .header__nav-list {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 .header__nav .header__nav-link {
     font-size: 0.875rem;
@@ -173,7 +173,8 @@ header.scroll::after {
     display: flex;
     align-items: center;
     justify-content: end;
-    width: 25%;
+    width: 34%;
+    gap: 1rem;
 }
 .header__btn {
     display: flex;
@@ -192,6 +193,12 @@ header.scroll::after {
 }
 .header__menu-btn {
     display: none;
+}
+.header__tel-link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 140%;
+    letter-spacing: -0.0175rem;
 }
 
 @media (max-width: 768px) {
@@ -212,6 +219,7 @@ header.scroll::after {
     }
     .header__right {
         width: 50%;
+        gap: 1.25rem;
     }
     .header__btn {
         display: none;
@@ -230,6 +238,12 @@ header.scroll::after {
         background-repeat: no-repeat;
         background-position: center;
         background-size: 1rem;
+    }
+    .header__tel-link {
+        font-size: 0.75rem;
+        font-weight: 400;
+        line-height: 140%;
+        letter-spacing: -0.0075rem;
     }
 }
 /* header end  */
@@ -2163,8 +2177,8 @@ header.scroll::after {
 }
 .cases-section__header__top {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: start;
+    flex-direction: column;
     gap: 1.875rem;
 }
 .cases-section__title {
@@ -2178,7 +2192,6 @@ header.scroll::after {
     border-radius: 6.25rem;
     padding: 0.0625rem;
     background: linear-gradient(87deg, #00d540 -1.76%, #0357c4 94.13%);
-    margin: 0 0 0 auto;
 }
 .cases-section__tag p {
     color: #fff;
@@ -2384,19 +2397,11 @@ header.scroll::after {
         width: 100%;
     }
     .cases-section__header__top {
-        flex-direction: column;
-        align-items: start;
-        justify-content: start;
         gap: 1.5rem;
     }
     .cases-section__title {
         font-size: 1.5rem;
         letter-spacing: -0.015rem;
-        order: 2;
-    }
-    .cases-section__tag {
-        order: 1;
-        margin: 0;
     }
     .cases-section__tag p {
         font-size: 0.75rem;
@@ -2563,7 +2568,7 @@ header.scroll::after {
     gap: 2rem;
 }
 .reviews-section__slide-ico img {
-    width: 7.25rem;
+    width: 7.625rem;
     height: auto;
 }
 .reviews-section__slide-info {
@@ -4289,6 +4294,8 @@ footer {
     .uslugi-hero {
         padding: 4.25rem 0;
         overflow: hidden;
+        min-height: 45rem;
+        height: 100dvh;
     }
     .uslugi-hero::before {
         content: "";
@@ -6242,6 +6249,25 @@ footer {
     border-radius: 1rem;
     overflow: hidden;
 }
+.blog-page__bottom {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+.blog-page__more-btn {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 140%;
+    letter-spacing: -0.0175rem;
+    border-radius: 6.25rem;
+    border: 0.0625rem solid #fff;
+    transition: all 0.4s ease-in-out;
+}
+.blog-page__more-btn:hover {
+    background: #fff;
+    color: #000;
+}
 @media (max-width: 768px) {
     .blog-page {
         padding: 4.25rem 0 2rem;
@@ -6314,6 +6340,10 @@ footer {
     .blog-page__main .blog-page__item:nth-child(3) .blog-page__item__img {
         height: 11.25rem;
         border-radius: 0.5rem;
+    }
+    .blog-page__more-btn:hover {
+        background: none;
+        color: #fff;
     }
 }
 /* blog-page end  */
@@ -7168,8 +7198,8 @@ footer {
     letter-spacing: -0.0225rem;
 }
 .case-hero__img {
-    width: 6.25rem;
-    height: auto;
+    width: auto;
+    height: 3rem;
 }
 @media (max-width: 768px) {
     .case-hero {
@@ -7199,7 +7229,8 @@ footer {
         letter-spacing: -0.01rem;
     }
     .case-hero__img {
-        display: none;
+        width: auto;
+        height: 2.625rem;
     }
 }
 /* case-hero end  */

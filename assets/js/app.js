@@ -909,10 +909,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     })();
 
 
-
-
-
-    // Анимация заполнения текста при скролле
+    // Анимация заполнения текста при скролле (финиш на 9.375rem от верха)
     (() => {
         if (!window.gsap || !window.ScrollTrigger) return;
 
@@ -926,21 +923,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
         textNodes.forEach(node => {
             const raw = node.nodeValue;
             const parts = raw.split(/(\s+)/);
-
             const frag = document.createDocumentFragment();
+
             parts.forEach(part => {
                 if (part.trim() === '') {
                     frag.appendChild(document.createTextNode(part));
                 } else {
-                    const w = document.createElement('span');
-                    w.className = 'ms-word';
+                    const word = document.createElement('span');
+                    word.className = 'ms-word';
                     for (const ch of part) {
                         const s = document.createElement('span');
                         s.className = 'ms-letter';
                         s.textContent = ch;
-                        w.appendChild(s);
+                        word.appendChild(s);
                     }
-                    frag.appendChild(w);
+                    frag.appendChild(word);
                 }
             });
 
@@ -951,11 +948,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
         const letters = title.querySelectorAll('.ms-letter');
 
+        const remToPx = rem => rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: title,
                 start: 'top 80%',
-                end: 'bottom 20%',
+                end: () => `top ${remToPx(5.375)}px`,
                 scrub: true,
                 invalidateOnRefresh: true
             }
@@ -964,8 +963,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         letters.forEach((el, i) => {
             tl.to(el, { color: '#ffffff', duration: 0.15, ease: 'none' }, i * 0.02);
         });
-
     })();
+
 
     // Мобильное меню
     (() => {
